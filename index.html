@@ -1,0 +1,937 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Convertify+ - Dosyaları Anında Dönüştür</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #6466F2;
+            --primary-dark: #4F51D9;
+            --background: #F5F5FA;
+            --text-dark: #141724;
+            --text-light: #6B7280;
+            --orange: #FF8C00;
+            --teal: #00CCD9;
+            --purple: #8C38FF;
+            --pink: #F24080;
+            --green: #33C759;
+            --white: #FFFFFF;
+            --shadow: 0 4px 12px rgba(100, 102, 242, 0.1);
+            --shadow-hover: 0 12px 24px rgba(100, 102, 242, 0.15);
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Rounded', system-ui, sans-serif;
+            color: var(--text-dark);
+            background-color: var(--background);
+            line-height: 1.6;
+        }
+
+        /* Navbar */
+        nav {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            z-index: 1000;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+        }
+
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary);
+            text-decoration: none;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            list-style: none;
+        }
+
+        .nav-links a {
+            color: var(--text-dark);
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s ease;
+        }
+
+        .nav-links a:hover {
+            color: var(--primary);
+        }
+
+        .download-btn {
+            background: var(--primary);
+            color: var(--white);
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            border: none;
+            cursor: pointer;
+        }
+
+        .download-btn:hover {
+            background: var(--primary-dark);
+            box-shadow: var(--shadow-hover);
+            transform: translateY(-2px);
+        }
+
+        .hamburger {
+            display: none;
+            flex-direction: column;
+            cursor: pointer;
+            gap: 5px;
+        }
+
+        .hamburger span {
+            width: 25px;
+            height: 3px;
+            background: var(--text-dark);
+            border-radius: 2px;
+            transition: all 0.3s ease;
+        }
+
+        /* Hero Section */
+        .hero {
+            margin-top: 60px;
+            padding: 6rem 2rem;
+            text-align: center;
+            background: linear-gradient(135deg, #F5F5FA 0%, #FFFFFF 100%);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -10%;
+            width: 500px;
+            height: 500px;
+            background: rgba(100, 102, 242, 0.05);
+            border-radius: 50%;
+            z-index: 0;
+        }
+
+        .hero::after {
+            content: '';
+            position: absolute;
+            bottom: -30%;
+            left: -5%;
+            width: 400px;
+            height: 400px;
+            background: rgba(0, 204, 217, 0.05);
+            border-radius: 50%;
+            z-index: 0;
+        }
+
+        .hero-content {
+            max-width: 800px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 1;
+        }
+
+        .app-icon {
+            width: 120px;
+            height: 120px;
+            margin: 0 auto 2rem;
+            background: linear-gradient(135deg, var(--primary), #7B7EFF);
+            border-radius: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3rem;
+            color: var(--white);
+            box-shadow: 0 20px 40px rgba(100, 102, 242, 0.3);
+            animation: float 3s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-20px); }
+        }
+
+        .hero h1 {
+            font-size: 3.5rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            color: var(--text-dark);
+            line-height: 1.2;
+        }
+
+        .hero p {
+            font-size: 1.25rem;
+            color: var(--text-light);
+            margin-bottom: 2rem;
+            line-height: 1.6;
+        }
+
+        .hero-buttons {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-bottom: 3rem;
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: var(--white);
+            padding: 1rem 2rem;
+            border-radius: 12px;
+            text-decoration: none;
+            font-weight: 600;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: inline-block;
+        }
+
+        .btn-primary:hover {
+            background: var(--primary-dark);
+            box-shadow: var(--shadow-hover);
+            transform: translateY(-3px);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: var(--primary);
+            padding: 1rem 2rem;
+            border-radius: 12px;
+            text-decoration: none;
+            font-weight: 600;
+            border: 2px solid var(--primary);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: inline-block;
+        }
+
+        .btn-secondary:hover {
+            background: var(--primary);
+            color: var(--white);
+        }
+
+        .mockup-placeholder {
+            width: 100%;
+            max-width: 400px;
+            height: 500px;
+            margin: 0 auto;
+            background: linear-gradient(135deg, var(--primary), #7B7EFF);
+            border-radius: 40px;
+            border: 12px solid var(--text-dark);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--white);
+            font-size: 1.2rem;
+            box-shadow: 0 30px 60px rgba(100, 102, 242, 0.2);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .mockup-placeholder::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 30px;
+            background: var(--text-dark);
+            border-radius: 0 0 20px 20px;
+        }
+
+        /* Features Grid */
+        .features {
+            padding: 6rem 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .section-title {
+            text-align: center;
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            color: var(--text-dark);
+        }
+
+        .section-subtitle {
+            text-align: center;
+            font-size: 1.1rem;
+            color: var(--text-light);
+            margin-bottom: 3rem;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
+        }
+
+        .feature-card {
+            background: var(--white);
+            padding: 2rem;
+            border-radius: 16px;
+            box-shadow: var(--shadow);
+            transition: all 0.3s ease;
+            text-align: center;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-8px);
+            box-shadow: var(--shadow-hover);
+        }
+
+        .feature-icon {
+            width: 60px;
+            height: 60px;
+            margin: 0 auto 1.5rem;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+        }
+
+        .icon-indigo { background: rgba(100, 102, 242, 0.1); color: var(--primary); }
+        .icon-orange { background: rgba(255, 140, 0, 0.1); color: var(--orange); }
+        .icon-teal { background: rgba(0, 204, 217, 0.1); color: var(--teal); }
+        .icon-purple { background: rgba(140, 56, 255, 0.1); color: var(--purple); }
+        .icon-pink { background: rgba(242, 64, 128, 0.1); color: var(--pink); }
+        .icon-green { background: rgba(51, 199, 89, 0.1); color: var(--green); }
+
+        .feature-card h3 {
+            font-size: 1.3rem;
+            margin-bottom: 0.5rem;
+            color: var(--text-dark);
+        }
+
+        .feature-card p {
+            color: var(--text-light);
+            font-size: 0.95rem;
+        }
+
+        /* How It Works */
+        .how-it-works {
+            padding: 6rem 2rem;
+            background: var(--white);
+        }
+
+        .how-it-works-container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .steps-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 3rem;
+            margin-top: 3rem;
+        }
+
+        .step {
+            text-align: center;
+            position: relative;
+        }
+
+        .step-number {
+            width: 60px;
+            height: 60px;
+            background: var(--primary);
+            color: var(--white);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin: 0 auto 1.5rem;
+            box-shadow: var(--shadow);
+        }
+
+        .step h3 {
+            font-size: 1.3rem;
+            margin-bottom: 0.5rem;
+            color: var(--text-dark);
+        }
+
+        .step p {
+            color: var(--text-light);
+            font-size: 0.95rem;
+        }
+
+        /* Pricing */
+        .pricing {
+            padding: 6rem 2rem;
+            background: linear-gradient(135deg, #F5F5FA 0%, #FFFFFF 100%);
+        }
+
+        .pricing-container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .pricing-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+
+        .pricing-card {
+            background: var(--white);
+            padding: 2.5rem;
+            border-radius: 16px;
+            box-shadow: var(--shadow);
+            transition: all 0.3s ease;
+            position: relative;
+            text-align: center;
+        }
+
+        .pricing-card.popular {
+            border: 2px solid var(--primary);
+            transform: scale(1.05);
+        }
+
+        .pricing-card:hover {
+            transform: translateY(-8px);
+            box-shadow: var(--shadow-hover);
+        }
+
+        .pricing-card.popular:hover {
+            transform: scale(1.05) translateY(-8px);
+        }
+
+        .popular-badge {
+            position: absolute;
+            top: -15px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--primary);
+            color: var(--white);
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 700;
+        }
+
+        .plan-name {
+            font-size: 1.3rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: var(--text-dark);
+        }
+
+        .plan-price {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .plan-price span {
+            font-size: 1rem;
+            color: var(--text-light);
+            font-weight: 400;
+        }
+
+        .plan-features {
+            list-style: none;
+            margin: 2rem 0;
+            text-align: left;
+            border-top: 1px solid #E5E7EB;
+            border-bottom: 1px solid #E5E7EB;
+            padding: 2rem 0;
+        }
+
+        .plan-features li {
+            padding: 0.75rem 0;
+            color: var(--text-light);
+            font-size: 0.95rem;
+        }
+
+        .plan-features li::before {
+            content: '✓ ';
+            color: var(--primary);
+            font-weight: 700;
+            margin-right: 0.5rem;
+        }
+
+        .pricing-note {
+            text-align: center;
+            margin-top: 3rem;
+            color: var(--text-light);
+            font-size: 0.95rem;
+        }
+
+        /* FAQ */
+        .faq {
+            padding: 6rem 2rem;
+            background: var(--white);
+        }
+
+        .faq-container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .faq-item {
+            margin-bottom: 1rem;
+            border: 1px solid #E5E7EB;
+            border-radius: 12px;
+            overflow: hidden;
+        }
+
+        .faq-question {
+            background: var(--white);
+            padding: 1.5rem;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-weight: 600;
+            color: var(--text-dark);
+            transition: all 0.3s ease;
+            user-select: none;
+        }
+
+        .faq-question:hover {
+            background: #F9F9FB;
+        }
+
+        .faq-question.active {
+            background: var(--primary);
+            color: var(--white);
+        }
+
+        .faq-toggle {
+            font-size: 1.5rem;
+            transition: transform 0.3s ease;
+        }
+
+        .faq-question.active .faq-toggle {
+            transform: rotate(180deg);
+        }
+
+        .faq-answer {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease;
+            background: #F9F9FB;
+        }
+
+        .faq-answer.active {
+            max-height: 500px;
+        }
+
+        .faq-answer p {
+            padding: 1.5rem;
+            color: var(--text-light);
+            line-height: 1.8;
+        }
+
+        /* Footer */
+        footer {
+            background: var(--text-dark);
+            color: var(--white);
+            padding: 3rem 2rem;
+            text-align: center;
+        }
+
+        .footer-container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .footer-links {
+            display: flex;
+            gap: 2rem;
+            justify-content: center;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .footer-links a {
+            color: var(--white);
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .footer-links a:hover {
+            color: var(--primary);
+        }
+
+        .footer-copyright {
+            color: #9CA3AF;
+            font-size: 0.9rem;
+            margin-bottom: 1rem;
+        }
+
+        .footer-badge {
+            display: inline-block;
+            margin-top: 1rem;
+        }
+
+        /* Animations */
+        .fade-in {
+            opacity: 0;
+            animation: fadeIn 0.6s ease-in-out forwards;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Mobile Responsive */
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+            }
+
+            .hamburger {
+                display: flex;
+            }
+
+            .hero h1 {
+                font-size: 2rem;
+            }
+
+            .hero p {
+                font-size: 1rem;
+            }
+
+            .section-title {
+                font-size: 2rem;
+            }
+
+            .pricing-card.popular {
+                transform: scale(1);
+            }
+
+            .pricing-card.popular:hover {
+                transform: translateY(-8px);
+            }
+
+            .hero-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .btn-primary, .btn-secondary {
+                width: 100%;
+            }
+
+            .mockup-placeholder {
+                max-width: 300px;
+                height: 400px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navbar -->
+    <nav>
+        <div class="nav-container">
+            <a href="#" class="logo">Convertify+</a>
+            <ul class="nav-links">
+                <li><a href="#features">Özellikler</a></li>
+                <li><a href="#pricing">Fiyatlandırma</a></li>
+                <li><a href="#faq">SSS</a></li>
+            </ul>
+            <a href="#" class="download-btn">App Store'da İndir</a>
+            <div class="hamburger">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-content">
+            <div class="app-icon">🔄</div>
+            <h1>Herhangi Bir Dosyayı Anında Dönüştür</h1>
+            <p>Görselleri, PDF'leri ve belgeleri tek dokunuşla dönüştür. Hızlı, güvenli ve güçlü.</p>
+            <div class="hero-buttons">
+                <a href="#" class="btn-primary">App Store'da İndir</a>
+                <a href="#features" class="btn-secondary">Daha Fazla Bilgi</a>
+            </div>
+            <div class="mockup-placeholder">
+                iPhone Ekran Görüntüsü
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section class="features" id="features">
+        <h2 class="section-title">Güçlü Özellikler</h2>
+        <p class="section-subtitle">Convertify+ ile dosya dönüştürme hiç bu kadar kolay olmamıştı</p>
+        <div class="features-grid">
+            <div class="feature-card fade-in">
+                <div class="feature-icon icon-indigo">📁</div>
+                <h3>Tüm Format Desteği</h3>
+                <p>PDF, DOCX, JPG, PNG, HEIC, WEBP, MP4 ve daha fazlası.</p>
+            </div>
+            <div class="feature-card fade-in">
+                <div class="feature-icon icon-orange">⚡</div>
+                <h3>Yıldırım Hızı</h3>
+                <p>Dosyaları saniyeler içinde dönüştür, cihazda işleme ile.</p>
+            </div>
+            <div class="feature-card fade-in">
+                <div class="feature-icon icon-teal">🔒</div>
+                <h3>%100 Gizli</h3>
+                <p>Tüm dönüştürmeler yerel olarak gerçekleşir. Sunuculara dosya yüklenmez.</p>
+            </div>
+            <div class="feature-card fade-in">
+                <div class="feature-icon icon-purple">📝</div>
+                <h3>OCR Metin Tanıma</h3>
+                <p>Görseller ve taranmış belgelerden metin çıkart.</p>
+            </div>
+            <div class="feature-card fade-in">
+                <div class="feature-icon icon-pink">📄</div>
+                <h3>PDF Araçları</h3>
+                <p>PDF'leri birleştir, böl, sıkıştır ve dönüştür.</p>
+            </div>
+            <div class="feature-card fade-in">
+                <div class="feature-icon icon-green">📦</div>
+                <h3>Toplu İşlem</h3>
+                <p>Pro ile birden fazla dosyayı aynı anda dönüştür.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- How It Works -->
+    <section class="how-it-works">
+        <div class="how-it-works-container">
+            <h2 class="section-title">Nasıl Çalışır?</h2>
+            <p class="section-subtitle">3 basit adımda dosyalarını dönüştür</p>
+            <div class="steps-container">
+                <div class="step fade-in">
+                    <div class="step-number">1</div>
+                    <h3>Dosyanı Seç</h3>
+                    <p>Fotoğraflardan, Dosyalardan veya herhangi bir uygulamadan seç.</p>
+                </div>
+                <div class="step fade-in">
+                    <div class="step-number">2</div>
+                    <h3>Çıkış Formatını Seç</h3>
+                    <p>20+ desteklenen format arasından seç.</p>
+                </div>
+                <div class="step fade-in">
+                    <div class="step-number">3</div>
+                    <h3>Dönüştür & Paylaş</h3>
+                    <p>Dosyanı anında al. Kaydet veya herhangi yere paylaş.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Pricing Section -->
+    <section class="pricing" id="pricing">
+        <div class="pricing-container">
+            <h2 class="section-title">Basit Fiyatlandırma</h2>
+            <p class="section-subtitle">Tüm planlar sınırsız dönüştürme içerir</p>
+            <div class="pricing-cards">
+                <div class="pricing-card fade-in">
+                    <h3 class="plan-name">Haftalık</h3>
+                    <div class="plan-price">₺29<span>.99/hafta</span></div>
+                    <ul class="plan-features">
+                        <li>Sınırsız Dönüştürme</li>
+                        <li>Tüm Formatlar</li>
+                        <li>Dosya Boyutu Sınırı Yok</li>
+                        <li>Öncelikli Destek</li>
+                    </ul>
+                    <a href="#" class="btn-primary">Başla</a>
+                </div>
+                <div class="pricing-card fade-in">
+                    <h3 class="plan-name">Aylık</h3>
+                    <div class="plan-price">₺79<span>.99/ay</span></div>
+                    <ul class="plan-features">
+                        <li>Sınırsız Dönüştürme</li>
+                        <li>Tüm Formatlar</li>
+                        <li>Dosya Boyutu Sınırı Yok</li>
+                        <li>Öncelikli Destek</li>
+                    </ul>
+                    <a href="#" class="btn-primary">Başla</a>
+                </div>
+                <div class="pricing-card popular fade-in">
+                    <div class="popular-badge">EN POPÜLER</div>
+                    <h3 class="plan-name">Yıllık</h3>
+                    <div class="plan-price">₺349<span>.99/yıl</span></div>
+                    <ul class="plan-features">
+                        <li>Sınırsız Dönüştürme</li>
+                        <li>Tüm Formatlar</li>
+                        <li>Dosya Boyutu Sınırı Yok</li>
+                        <li>Öncelikli Destek</li>
+                    </ul>
+                    <a href="#" class="btn-primary">Başla</a>
+                </div>
+            </div>
+            <p class="pricing-note">2 ücretsiz dönüştürme dahil. Kredi kartı gerekmez.</p>
+        </div>
+    </section>
+
+    <!-- FAQ Section -->
+    <section class="faq" id="faq">
+        <div class="faq-container">
+            <h2 class="section-title">Sık Sorulan Sorular</h2>
+            <div class="faq-item">
+                <div class="faq-question">
+                    <span>Convertify+ ücretsiz mi?</span>
+                    <span class="faq-toggle">▼</span>
+                </div>
+                <div class="faq-answer">
+                    <p>2 ücretsiz dönüştürme alırsınız. Bundan sonra sınırsız erişim için abone olun.</p>
+                </div>
+            </div>
+            <div class="faq-item">
+                <div class="faq-question">
+                    <span>Dosyalarım güvenli mi?</span>
+                    <span class="faq-toggle">▼</span>
+                </div>
+                <div class="faq-answer">
+                    <p>Evet. Tüm işlemler cihazınızda gerçekleşir. Dosyalarınızı hiçbir zaman sunuculara yüklemeyiz.</p>
+                </div>
+            </div>
+            <div class="faq-item">
+                <div class="faq-question">
+                    <span>İptal edebilir miyim?</span>
+                    <span class="faq-toggle">▼</span>
+                </div>
+                <div class="faq-answer">
+                    <p>Kesinlikle. Apple ID ayarlarından istediğiniz zaman iptal edebilirsiniz.</p>
+                </div>
+            </div>
+            <div class="faq-item">
+                <div class="faq-question">
+                    <span>Hangi formatlar destekleniyor?</span>
+                    <span class="faq-toggle">▼</span>
+                </div>
+                <div class="faq-answer">
+                    <p>Görseller (JPG, PNG, HEIC, WEBP, BMP, TIFF), Belgeler (PDF, DOCX, TXT, RTF) ve daha fazlası.</p>
+                </div>
+            </div>
+            <div class="faq-item">
+                <div class="faq-question">
+                    <span>Satın almamı nasıl geri yüklerim?</span>
+                    <span class="faq-toggle">▼</span>
+                </div>
+                <div class="faq-answer">
+                    <p>Uygulamadaki Ayarlar'a gidin ve 'Satın Almayı Geri Yükle'ye dokunun veya ödeme ekranındaki Geri Yükle düğmesini kullanın.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-container">
+            <div class="footer-links">
+                <a href="terms.html">Hizmet Şartları</a>
+                <a href="privacy.html">Gizlilik Politikası</a>
+            </div>
+            <div class="footer-copyright">
+                © 2026 Convertify+. Tüm Hakları Saklıdır.
+            </div>
+            <div class="footer-badge">
+                <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 120 40' width='120' height='40'%3E%3Crect fill='%23000' width='120' height='40' rx='5'/%3E%3Ctext x='60' y='25' font-family='system-ui' font-size='12' fill='%23fff' text-anchor='middle' font-weight='600'%3EApp Store%3C/text%3E%3C/svg%3E" alt="App Store Badge">
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Smooth scroll behavior for nav links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({ behavior: 'smooth' });
+                }
+            });
+        });
+
+        // FAQ Accordion
+        const faqQuestions = document.querySelectorAll('.faq-question');
+        faqQuestions.forEach(question => {
+            question.addEventListener('click', () => {
+                const faqItem = question.parentElement;
+                const answer = faqItem.querySelector('.faq-answer');
+                const isActive = question.classList.contains('active');
+
+                // Close all other FAQs
+                document.querySelectorAll('.faq-question.active').forEach(q => {
+                    if (q !== question) {
+                        q.classList.remove('active');
+                        q.parentElement.querySelector('.faq-answer').classList.remove('active');
+                    }
+                });
+
+                // Toggle current FAQ
+                question.classList.toggle('active');
+                answer.classList.toggle('active');
+            });
+        });
+
+        // Intersection Observer for fade-in animations
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -100px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.fade-in').forEach(el => {
+            observer.observe(el);
+        });
+
+        // Hamburger menu toggle
+        const hamburger = document.querySelector('.hamburger');
+        const navLinks = document.querySelector('.nav-links');
+        
+        hamburger.addEventListener('click', () => {
+            navLinks.style.display = navLinks.style.display === 'flex' ? 'none' : 'flex';
+        });
+    </script>
+</body>
+</html>
